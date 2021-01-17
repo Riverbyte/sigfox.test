@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\DeviceComponent;
 use App\Http\Livewire\MessageComponent;
+use App\Http\Controllers\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,13 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', DeviceComponent::class)->name('dashboard');
+//Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', DeviceComponent::class)->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('devices.admin');
+})->name('dashboard');
+
+
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/messages', MessageComponent::class)->name('messages');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');

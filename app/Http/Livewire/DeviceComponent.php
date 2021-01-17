@@ -4,13 +4,41 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Device;
+use Livewire\WithPagination;
 
 class DeviceComponent extends Component
 {
+    use WithPagination;  
+    
+    public $active;
+    public $q;
+    public $sortBy = 'id';
+    public $sortAsc = true;
+    public $item;
+ 
+    public $confirmingItemDeletion = false;
+    public $confirmingItemAdd = false;
+
+
 
     public $device, $name, $description, $user, $device_id;
 
     public $accion = 'store';
+
+    protected $queryString = [
+        'active' => ['except' => false],
+        'q' => ['except' => ''],
+        'sortBy' => ['except' => 'id'],
+        'sortAsc' => ['except' => true],
+    ];
+ 
+    protected $rules = [
+        'item.name' => 'required|string|min:4',
+        'item.price' => 'required|numeric|between:1,100',
+        'item.status' => 'boolean'
+    ];
+
+
 
     public function render()
     {
@@ -29,6 +57,7 @@ class DeviceComponent extends Component
         $this->reset(['device','name','description','user' ]);
     }
 
+
     public function edit(Device $device)
     {
         $this->device = $device->device;
@@ -37,6 +66,8 @@ class DeviceComponent extends Component
         $this->user = $device->user;
         $this->device_id = $device->id;
         $this->accion = 'update';
+
+       
     }
 
     public function update()
@@ -65,4 +96,7 @@ class DeviceComponent extends Component
     {
         $device->delete();
     }
+
+
+
 }

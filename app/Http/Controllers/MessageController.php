@@ -26,4 +26,14 @@ class MessageController extends Controller
         
         //return $device->name;
     }
+
+
+    public function show($id)
+    {
+        $messages = Message::join("devices","messages.DEVICE_ID","=","devices.ID")->select(DB::raw("messages.ID, devices.NAME,devices.DEVICE, messages.DATA, messages.TIME"))->where('device_id',$id)->orderBy('messages.ID','desc')->paginate();
+
+        return view('messages.show', compact('messages'));
+    }
+
+
 }
