@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\DeviceComponent;
+
 use App\Http\Livewire\MessageComponent;
 use App\Http\Controllers\MessageController;
+use App\Http\Livewire\UsersComponent;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('devices.admin');
 })->name('dashboard');
 
+
+Route::middleware(['auth:sanctum', 'verified'])
+->get('/users', UsersComponent::class)
+->name('users');
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/messages', MessageComponent::class)->name('messages');
