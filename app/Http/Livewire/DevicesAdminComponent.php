@@ -5,13 +5,15 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Device;
 use Livewire\WithPagination;
+use GuzzleHttp\Client;
 
 class DevicesAdminComponent extends Component
 {
     use WithPagination; 
 
-    public $device, $name, $description, $user, $device_id;
+    public $device, $name, $description, $user, $device_id, $pac;
 
+    public $deviceTypeId = '5f4e7ec5c563d604790a8711';
 
     public $active;
     public $q;
@@ -22,6 +24,11 @@ class DevicesAdminComponent extends Component
  
     public $confirmingItemDeletion = false;
     public $confirmingItemAdd = false;
+
+    private $username = '5fadde640499f50eff9068a3';
+    private $password = 'ac3cf1e109a4ec9f00b518f5c4c85881';
+    public $status = array();
+    public $estados_request = array(0 =>'OK', 1 => 'DEAD', 2 => 'OFF_CONTRACT', 3 => 'DISABLED', 4 => 'WARN', 5 => 'DELETED', 6 => 'SUSPENDED', 7 => 'NOT_ACTIVABLE');
     
 
     protected $queryString = [
@@ -41,7 +48,7 @@ class DevicesAdminComponent extends Component
     public function render()
     {
         $user_auth = auth()->user()->id;
-        
+        $this->user = $user_auth;
 
         $devices = Device::when( $this->q, function($query) {
                 return $query->where(function( $query) {
@@ -79,12 +86,38 @@ class DevicesAdminComponent extends Component
         $query = $devices->toSql();
         $devices = $devices->paginate( $this->perPage );
         
+        foreach($devices as $device)
+        {
+            $this->status[$device->device] = 'offline';
+        }
+
         
+        
+        
+        $client = new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'https://api.sigfox.com/v2/',
+            // You can set any number of default request options.
+            "auth" => [$this->username, $this->password],
+            'timeout'  => 2.0,
+        ]);
+
+        $res = $client->request("GET", "devices");
+        $res->getStatusCode();
+        $response = json_decode($res->getBody()->getContents());
+
+        foreach($response->data as $device_response)
+        {
+            $this->status[$device_response->id] = $this->estados_request[$device_response->state];
+        }
+
+        //dd($response->data);
 
         return view('livewire.devices-admin-component', [
             'devices' => $devices,
             'query' => $query,
             'user_auth' => $user_auth,
+            'response' => $response->data,
         ]);
 
         //$devices = Device::latest('id')->get();
@@ -117,9 +150,36 @@ class DevicesAdminComponent extends Component
 
     public function destroy(Device $device)
     {
-        $device->delete();
+        $client = new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'https://api.sigfox.com/v2/',
+            // You can set any number of default request options.
+            "auth" => [$this->username, $this->password],
+            'timeout'  => 2.0,
+        ]);
+        
+        try{
+            $res = $client->request("DELETE", "devices/". $device->device, ['http_errors' => false]);
+        } catch (ClientException $e) {
+                
+        }
+        $res->getStatusCode();
+        $response = json_decode($res->getBody()->getContents());
+
+        if( isset($response->message))
+        {
+            session()->flash('message', $response->message);
+            session()->flash('alert-class', 'alert-danger'); 
+        }
+        else
+        {
+            $device->delete();
+            session()->flash('message', 'Item Deleted Successfully');
+            session()->flash('alert-class', 'alert-succes'); 
+        }
+
         $this->confirmingItemDeletion = false;
-        session()->flash('message', 'Item Deleted Successfully');
+        
     }
 
 
@@ -130,28 +190,95 @@ class DevicesAdminComponent extends Component
     }
 
 
+
+
     public function saveItem() 
     {
         $this->validate();
  
         
         if( isset( $this->device_id)) {
-            $device = Device::find($this->device_id);
-            $device->update([
+            $client = new Client([
+                // Base URI is used with relative requests
+                'base_uri' => 'https://api.sigfox.com/v2/',
+                // You can set any number of default request options.
+                "auth" => [$this->username, $this->password],
+                'timeout'  => 2.0,
+            ]);
+            $request_param = [
+                "name" => $this->name
+            ];
+            try {
+                $res = $client->request("PUT", "devices/". $this->device, ['http_errors' => false, 'json' => $request_param]);
+            } catch (ClientException $e) {
+                
+            }
+            $res->getStatusCode();
+            $response = json_decode($res->getBody()->getContents());
+            if( isset($response->message))
+            {
+                session()->flash('message', $response->message);
+                session()->flash('alert-class', 'alert-danger'); 
+            }
+            else
+            {
+                $device = Device::find($this->device_id);
+                $device->update([
+                    'device' => $this->device,
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'user' => $this->user
+                ]);
+                session()->flash('message', 'Item Updated Successfully');
+                session()->flash('alert-class', 'alert-succes'); 
+            }
+        } else {
+
+            $client = new Client([
+                // Base URI is used with relative requests
+                'base_uri' => 'https://api.sigfox.com/v2/',
+                // You can set any number of default request options.
+                "auth" => [$this->username, $this->password],
+                'timeout'  => 2.0,
+            ]);
+                
+            $request_param = [
+                "deviceTypeId" => '5f4e7ec5c563d604790a8711',
+                "id" => $this->device,
+                "name" => $this->name,
+                "pac" => $this->pac,
+                "activable" => false,
+                "automaticRenewal" => true,
+                "prototype" => true,
+                "lat" => '0.0',
+                "lng" => '0.0'
+            ];
+            try {
+                $res = $client->request("POST", "devices/", ['http_errors' => false, 'json' => $request_param]);
+            } catch (ClientException $e) {
+                
+            }
+            $res->getStatusCode();
+            $response = json_decode($res->getBody()->getContents());
+            if( isset($response->errors))
+            {
+                session()->flash('message', $response->errors[0]->message);
+                session()->flash('alert-class', 'alert-danger'); 
+            }
+            else
+            {
+                Device::create([
                 'device' => $this->device,
                 'name' => $this->name,
                 'description' => $this->description,
                 'user' => $this->user
-            ]);
-            session()->flash('message', 'Item Saved Successfully');
-        } else {
-            Device::create([
-            'device' => $this->device,
-            'name' => $this->name,
-            'description' => $this->description,
-            'user' => $this->user
-            ]);
-            session()->flash('message', 'Item Added Successfully');
+                ]);
+                
+                session()->flash('message', 'Item Added Successfully');
+                session()->flash('alert-class', 'alert-succes'); 
+            }
+            
+            
         }
  
 
