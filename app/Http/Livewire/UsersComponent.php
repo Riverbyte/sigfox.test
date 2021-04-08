@@ -10,6 +10,7 @@ class UsersComponent extends Component
 {
     use WithPagination; 
     
+    
     public function render()
     {
 

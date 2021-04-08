@@ -20,9 +20,10 @@ class DevicesAdminComponent extends Component
     public $sortBy = 'id';
     public $sortAsc = true;
     public $item;
-    public $perPage = '5';
+    public $perPage = '10';
  
     public $confirmingItemDeletion = false;
+    public $confirmingItemSuspend = false;
     public $confirmingItemAdd = false;
 
     private $username = '5fadde640499f50eff9068a3';
@@ -247,7 +248,7 @@ class DevicesAdminComponent extends Component
                 "id" => $this->device,
                 "name" => $this->name,
                 "pac" => $this->pac,
-                "activable" => false,
+                "activable" => true,
                 "automaticRenewal" => true,
                 "prototype" => true,
                 "lat" => '0.0',
@@ -300,4 +301,88 @@ class DevicesAdminComponent extends Component
         $this->device_id = $device->id;
         $this->confirmingItemAdd = true;
     }
+
+    public function confirmItemSuspend( $id)
+    {
+        $this->confirmingItemSuspend = $id;
+    }
+
+
+
+    public function suspendItem(Device $device)
+    {
+        $client = new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'https://api.sigfox.com/v2/',
+            // You can set any number of default request options.
+            "auth" => [$this->username, $this->password],
+            'timeout'  => 2.0,
+        ]);
+        
+        $request_param = [
+            "data" => [$device->device]
+        ];
+        try {
+            $res = $client->request("POST", "devices/bulk/suspend", ['http_errors' => false, 'json' => $request_param]);
+        } catch (ClientException $e) {
+            
+        }
+        $res->getStatusCode();
+        $response = json_decode($res->getBody()->getContents());
+        
+        if( isset($response->message))
+        {
+            session()->flash('message', $response->message);
+            session()->flash('alert-class', 'alert-danger'); 
+        }
+        else
+        {
+            session()->flash('message', 'Item Suspended Successfully');
+            session()->flash('alert-class', 'alert-succes'); 
+        }
+        
+
+        $this->confirmingItemSuspend = false;
+        
+    }
+
+
+    public function enableItem(Device $device)
+    {
+        $client = new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'https://api.sigfox.com/v2/',
+            // You can set any number of default request options.
+            "auth" => [$this->username, $this->password],
+            'timeout'  => 2.0,
+        ]);
+        
+        $request_param = [
+            "data" => [$device->device]
+        ];
+        try {
+            $res = $client->request("POST", "devices/bulk/resume", ['http_errors' => false, 'json' => $request_param]);
+        } catch (ClientException $e) {
+            
+        }
+        $res->getStatusCode();
+        $response = json_decode($res->getBody()->getContents());
+        
+        if( isset($response->message))
+        {
+            session()->flash('message', $response->message);
+            session()->flash('alert-class', 'alert-danger'); 
+        }
+        else
+        {
+            session()->flash('message', 'Item Resumed Successfully');
+            session()->flash('alert-class', 'alert-succes'); 
+        }
+        
+
+        $this->confirmingItemSuspend = false;
+        
+    }
+
+
 }

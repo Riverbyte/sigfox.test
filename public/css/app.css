@@ -32760,6 +32760,25 @@ select {
   color: rgba(185, 28, 28, var(--tw-text-opacity));
 }
 
+.tooltip .tooltip-text {
+  --tw-bg-opacity: 1;
+  background-color: rgba(55, 65, 81, var(--tw-bg-opacity));
+  border-radius: 0.5rem;
+  display: inline-block;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.5rem;
+  position: absolute;
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
+  visibility: hidden;
+  z-index: 50;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
@@ -192204,4 +192223,3 @@ select {
             animation: bounce 1s infinite;
   }
 }
-

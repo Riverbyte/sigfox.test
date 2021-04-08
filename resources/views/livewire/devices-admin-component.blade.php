@@ -102,22 +102,44 @@
                             <td class="border px-4 py-2">{{$status[$device->device]}} </td>
                         
                             <td class="border px-4 py-2">
-                                <x-jet-button wire:click="confirmItemEdit( {{ $device->id}})" class="bg-blue-500 hover:bg-blue-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                    </svg>
-                                </x-jet-button>
-                                <x-jet-danger-button wire:click="confirmItemDeletion( {{ $device->id}})" wire:loading.attr="disabled">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                                    </svg>
-                                </x-jet-danger-button>
-
-                                <x-jet-danger-button  class="bg-green-500 hover:bg-green-700">
+                                <x-jet-danger-button  class="tooltip bg-green-500 hover:bg-green-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                                         <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
                                     </svg>
-                            </x-jet-danger-button>
+                                    <span class='tooltip-text bg-blue-200 p-3 -mt-16 -ml-6 rounded'>Configure</span>
+                                </x-jet-danger-button>
+
+                                <x-jet-button wire:click="confirmItemEdit( {{ $device->id}})" class="tooltip bg-blue-500 hover:bg-blue-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                    </svg>
+                                    <span class='tooltip-text bg-blue-200 p-3 -mt-16 -ml-6 rounded'>Edit</span>
+                                </x-jet-button>
+
+                                @if($status[$device->device] == 'SUSPENDED')
+                                    <x-jet-button wire:click="enableItem( {{$device}})" class="tooltip bg-green-500 hover:bg-green-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class='tooltip-text bg-blue-200 p-3 -mt-16 -ml-6 rounded'>Resume</span>
+                                    </x-jet-button>    
+                                @else
+                                    <x-jet-button wire:click="confirmItemSuspend( {{ $device->id}})" class="tooltip bg-yellow-700 hover:bg-yellow-900">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                        <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class='tooltip-text bg-blue-200 p-3 -mt-16 -ml-6 rounded'>Suspend</span>
+                                    </x-jet-button>  
+                                @endif
+                                
+
+                                <x-jet-danger-button wire:click="confirmItemDeletion( {{ $device->id}})" class="tooltip" wire:loading.attr="disabled">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    <span class='tooltip-text bg-blue-200 p-3 -mt-16 -ml-6 rounded'>Delete</span>
+                                </x-jet-danger-button>
+
                             </td>
                         </tr>
                     @endforeach
@@ -136,6 +158,26 @@
 
 
 
+
+    <x-jet-confirmation-modal wire:model="confirmingItemSuspend">
+        <x-slot name="title">
+            {{ __('Suspend Item') }}
+        </x-slot>
+ 
+        <x-slot name="content">
+            {{ __('Are you sure you want to suspend Item? ') }}
+        </x-slot>
+ 
+        <x-slot name="footer">
+            <x-jet-secondary-button wire:click="$set('confirmingItemSuspend', false)" wire:loading.attr="disabled">
+                {{ __('Nevermind') }}
+            </x-jet-secondary-button>
+ 
+            <x-jet-danger-button class="ml-2" wire:click="suspendItem({{ $confirmingItemSuspend }})" wire:loading.attr="disabled">
+                {{ __('Suspend') }}
+            </x-jet-danger-button>
+        </x-slot>
+    </x-jet-confirmation-modal>
 
 
 

@@ -23,11 +23,7 @@
                     </x-jet-nav-link>
                 </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-jet-nav-link href="{{ route('users') }}" :active="request()->routeIs('users*')">
-                        {{ __('Users') }}
-                    </x-jet-nav-link>
-                </div>
+
 
 
 
@@ -115,6 +111,12 @@
                                 {{ __('Profile') }}
                             </x-jet-dropdown-link>
 
+                            @can('Ver administrador')
+                                <x-jet-dropdown-link href="{{ route('admin.home') }}">
+                                    Administrador
+                                </x-jet-dropdown-link>
+                            @endcan
+
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-jet-dropdown-link href="{{ route('api-tokens.index') }}">
                                     {{ __('API Tokens') }}
@@ -164,11 +166,7 @@
             </x-jet-responsive-nav-link>
         </div>
 
-        <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-            <x-jet-responsive-nav-link href="{{ route('users') }}" :active="request()->routeIs('users*')">
-                {{ __('Users') }}
-            </x-jet-responsive-nav-link>
-        </div>
+
 
 
 
@@ -193,6 +191,14 @@
                 <x-jet-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
                     {{ __('Profile') }}
                 </x-jet-responsive-nav-link>
+
+                @can('Ver administrador')
+
+                    <x-jet-responsive-nav-link href="{{ route('admin.home') }}" :active="request()->routeIs('admin.')">
+                        Administrador
+                    </x-jet-responsive-nav-link>
+                                
+                @endcan
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                     <x-jet-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
