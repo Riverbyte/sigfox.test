@@ -10,4 +10,9 @@ class Device extends Model
     use HasFactory;
 
     protected $fillable = ['device','name','description','user'];
+
+     ///Relacion uno a muchos
+     public function events(){
+        return $this->hasMany('App\Models\Event');
+    }
 }

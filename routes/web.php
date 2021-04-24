@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\MessageComponent;
 use App\Http\Controllers\MessageController;
 use App\Http\Livewire\UsersComponent;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\BulkSmsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,3 +46,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/messages', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/users', UsersComponent::class)->name('users');
+
+Route::middleware(['auth:sanctum', 'verified'])->resource('/events', EventController::class)->names('events');
+
+Route::middleware(['auth:sanctum', 'verified'])->resource('/devices', DeviceController::class)->names('devices');
+
+Route::view('/bulksms', 'bulksms');
+Route::post('/bulksms', [BulkSmsController::class,'sendSms'])->name('bulksms.sms');

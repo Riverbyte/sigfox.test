@@ -2,6 +2,8 @@
 
 return [
 
+    'Xml' => XmlResponse\Facades\XmlFacade::class,
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

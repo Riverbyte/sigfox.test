@@ -9,9 +9,13 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Email</th>
+                            <th>
+                                <label wire:click="sortBy('id')">ID</label>
+                            </th>
+                            <th>
+                                <label wire:click="sortBy('name')">Nombre</label>
+                            </th>
+                            <th><label wire:click="sortBy('email')">Email</label></th>
                             <th></th>
                         </tr>
                     </thead>

@@ -6,12 +6,14 @@ use Livewire\Component;
 use App\Models\Device;
 use Livewire\WithPagination;
 use GuzzleHttp\Client;
+use App\Models\Event;
 
 class DevicesAdminComponent extends Component
 {
     use WithPagination; 
 
     public $device, $name, $description, $user, $device_id, $pac;
+    public $event_name, $email_destination, $message_destination, $call_destination, $email_content, $message_content, $call_content, $event_mail_id, $event_call_id, $event_msg_id;
 
     public $deviceTypeId = '5f4e7ec5c563d604790a8711';
 
@@ -25,6 +27,8 @@ class DevicesAdminComponent extends Component
     public $confirmingItemDeletion = false;
     public $confirmingItemSuspend = false;
     public $confirmingItemAdd = false;
+    public $confirmingEventAdd = false;
+
 
     private $username = '5fadde640499f50eff9068a3';
     private $password = 'ac3cf1e109a4ec9f00b518f5c4c85881';
@@ -382,6 +386,116 @@ class DevicesAdminComponent extends Component
 
         $this->confirmingItemSuspend = false;
         
+    }
+
+
+
+    public function confirmEventEdit(Device $device) 
+    {
+        $this->resetErrorBag();
+        $this->reset(['event_name','email_destination','message_destination','call_destination','email_content','message_content','call_content', 'event_mail_id','event_msg_id', 'device_id','event_call_id' ]);
+
+        foreach ($device->events as $key => $event) {
+            if ($event->name == 'EMAIL') {
+                $this->email_destination = $event->destination;
+                $this->email_content = $event->content;
+                $this->event_mail_id = $event->id;
+            }
+            else
+            if ($event->name == 'MESSAGE') {
+                $this->message_destination = $event->destination;
+                $this->message_content = $event->content;
+                $this->event_msg_id = $event->id;
+            }
+            else
+            if ($event->name == 'CALL') {
+                $this->call_destination = $event->destination;
+                $this->call_content = $event->content;
+                $this->event_call_id = $event->id;
+            }
+            
+        }
+
+        $this->device_id = $device->id;
+        $this->confirmingEventAdd = true;
+        
+    }
+
+
+    public function saveEvent()
+    {
+        if( isset( $this->event_mail_id)) 
+        {
+            $event = Event::find($this->event_mail_id);
+            $event->update([
+                'destination' => $this->email_destination,
+                'content' => $this->email_content,
+                'device_id' => $this->device_id
+            ]);
+            session()->flash('message', 'Item Updated Successfully');
+            session()->flash('alert-class', 'alert-succes'); 
+    
+        }
+        else
+        {
+            Event::create([
+                'name' => 'EMAIL',
+                'destination' => $this->email_destination,
+                'content' => $this->email_content,
+                'device_id' => $this->device_id
+            ]);
+        }
+
+
+        if( isset( $this->event_msg_id)) 
+        {
+            $event = Event::find($this->event_msg_id);
+            $event->update([
+                'destination' => $this->message_destination,
+                'content' => $this->message_content,
+                'device_id' => $this->device_id
+            ]);
+            session()->flash('message', 'Item Updated Successfully');
+            session()->flash('alert-class', 'alert-succes'); 
+    
+        }
+        else
+        {
+            Event::create([
+                'name' => 'MESSAGE',
+                'destination' => $this->message_destination,
+                'content' => $this->message_content,
+                'device_id' => $this->device_id
+            ]);
+        }
+        
+
+        if( isset( $this->event_call_id)) 
+        {
+            $event = Event::find($this->event_call_id);
+            $event->update([
+                'destination' => $this->call_destination,
+                'content' => $this->call_content,
+                'device_id' => $this->device_id
+            ]);
+            session()->flash('message', 'Item Updated Successfully');
+            session()->flash('alert-class', 'alert-succes'); 
+    
+        }
+        else
+        {
+            Event::create([
+                'name' => 'CALL',
+                'destination' => $this->call_destination,
+                'content' => $this->call_content,
+                'device_id' => $this->device_id
+            ]);
+        }
+        
+
+        $this->confirmingEventAdd = false;
+        $this->reset(['event_name','email_destination','message_destination','call_destination','email_content','message_content','call_content', 'event_mail_id','event_msg_id', 'device_id','event_call_id' ]);
+
     }
 
 

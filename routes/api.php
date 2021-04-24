@@ -20,3 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('messages', [MessageController::class, 'store'])->name('messages.store');
+
+Route::get('callmessage', function (Request $request) {
+    $data = [
+        'Say' => $request->message,
+    ];
+    return response()->xml($data);
+})->name('callmessage');

@@ -102,12 +102,14 @@
                             <td class="border px-4 py-2">{{$status[$device->device]}} </td>
                         
                             <td class="border px-4 py-2">
-                                <x-jet-danger-button  class="tooltip bg-green-500 hover:bg-green-700">
+                                
+                                <x-jet-danger-button wire:click="confirmEventEdit( {{ $device->id}})"  class="tooltip bg-green-500 hover:bg-green-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
                                         <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
                                     </svg>
                                     <span class='tooltip-text bg-blue-200 p-3 -mt-16 -ml-6 rounded'>Configure</span>
                                 </x-jet-danger-button>
+                                
 
                                 <x-jet-button wire:click="confirmItemEdit( {{ $device->id}})" class="tooltip bg-blue-500 hover:bg-blue-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
@@ -255,6 +257,78 @@
             </x-jet-secondary-button>
  
             <x-jet-danger-button class="ml-2" wire:click="saveItem()" wire:loading.attr="disabled">
+                {{ __('Save') }}
+            </x-jet-danger-button>
+        </x-slot>
+    </x-jet-dialog-modal>
+
+
+
+    <x-jet-dialog-modal wire:model="confirmingEventAdd">
+        <x-slot name="title">
+            {{ isset( $this->device_id) ? 'Edit Device' : 'Add Device'}}
+        </x-slot>
+ 
+        <x-slot name="content">
+            <h1 class="text-2x1 font-bold">Email:</h1>
+
+            <div class="mb-4">
+                <x-jet-label for="email_destination" class="form-label mb-2" value="{{ __('Email adress') }}" />
+                <x-jet-input id="email_destination" type="text" class="form-control " wire:model.defer="email_destination" />
+                <x-jet-input-error for="email_destination" class="mt-2" />
+            </div>
+
+            <div class="mb-4">
+                <x-jet-label for="email_content" class="form-label mb-2" value="{{ __('Message') }}" />
+                <x-jet-input id="email_content" type="text" class="form-control " wire:model.defer="email_content" />
+                <x-jet-input-error for="email_content" class="mt-2" />
+            </div>
+
+            <hr>
+
+            <h1 class="text-2x1 font-bold">Message:</h1>
+
+            <div class="mb-4">
+                <x-jet-label for="message_destination" class="form-label mb-2" value="{{ __('Phone number') }}" />
+                <x-jet-input id="message_destination" type="text" class="form-control " wire:model.defer="message_destination" />
+                <x-jet-input-error for="message_destination" class="mt-2" />
+            </div>
+
+            <div class="mb-4">
+                <x-jet-label for="message_content" class="form-label mb-2" value="{{ __('Message') }}" />
+                <x-jet-input id="message_content" type="text" class="form-control " wire:model.defer="message_content" />
+                <x-jet-input-error for="message_content" class="mt-2" />
+            </div>
+
+            <hr>
+
+            <h1 class="text-2x1 font-bold">Call:</h1>
+
+            <div class="mb-4">
+                <x-jet-label for="call_destination" class="form-label mb-2" value="{{ __('Phone number') }}" />
+                <x-jet-input id="call_destination" type="text" class="form-control " wire:model.defer="call_destination" />
+                <x-jet-input-error for="call_destination" class="mt-2" />
+            </div>
+
+            <div class="mb-4">
+                <x-jet-label for="call_content" class="form-label mb-2" value="{{ __('Message') }}" />
+                <x-jet-input id="call_content" type="text" class="form-control " wire:model.defer="call_content" />
+                <x-jet-input-error for="call_content" class="mt-2" />
+            </div>
+
+
+
+
+ 
+           
+        </x-slot>
+ 
+        <x-slot name="footer">
+            <x-jet-secondary-button wire:click="$set('confirmingEventAdd', false)" wire:loading.attr="disabled">
+                {{ __('Nevermind') }}
+            </x-jet-secondary-button>
+ 
+            <x-jet-danger-button class="ml-2" wire:click="saveEvent()" wire:loading.attr="disabled">
                 {{ __('Save') }}
             </x-jet-danger-button>
         </x-slot>

@@ -11,6 +11,13 @@ class AdminUsers extends Component
 {
     use WithPagination;
 
+    public $active;
+    public $q;
+    public $sortBy = 'id';
+    public $sortAsc = true;
+    public $item;
+    public $perPage = '10';
+
     protected $paginationTheme = 'bootstrap';
 
     public $search;
@@ -19,6 +26,7 @@ class AdminUsers extends Component
     {
         $users = User::where('name','LIKE','%' . $this->search . '%')
                 ->orwhere('email','LIKE','%' . $this->search . '%')
+                ->orderBy( $this->sortBy, $this->sortAsc ? 'ASC' : 'DESC')
                 ->paginate(8);
 
         return view('livewire.admin-users', compact('users'));
@@ -28,6 +36,14 @@ class AdminUsers extends Component
     public function limpiar_page()
     {
         $this->reset('page');
+    }
+
+    public function sortBy( $field) 
+    {
+        if( $field == $this->sortBy) {
+            $this->sortAsc = !$this->sortAsc;
+        }
+        $this->sortBy = $field;
     }
 
 }

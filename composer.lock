@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "391a8ac06b08ae131c6c5a881f2e6235",
+    "content-hash": "95bd5bff4b627e503fde60c561b667eb",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -1034,6 +1034,46 @@
                 "source": "https://github.com/guzzle/psr7/tree/1.7.0"
             },
             "time": "2020-09-30T07:37:11+00:00"
+        },
+        {
+            "name": "jailtonsc/laravel-response-xml",
+            "version": "v3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jailtonsc/laravel-response-xml.git",
+                "reference": "d7debb3893693fc50b9afd29bf9492f9a43506b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jailtonsc/laravel-response-xml/zipball/d7debb3893693fc50b9afd29bf9492f9a43506b3",
+                "reference": "d7debb3893693fc50b9afd29bf9492f9a43506b3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "XmlResponse\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Add the method xml integrating the laravel's response, converting eloquent return to XML.",
+            "keywords": [
+                "eloquent",
+                "laravel",
+                "response",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/jailtonsc/laravel-response-xml/issues",
+                "source": "https://github.com/jailtonsc/laravel-response-xml/tree/v3.0.1"
+            },
+            "time": "2018-06-30T18:37:31+00:00"
         },
         {
             "name": "jaybizzle/crawler-detect",
@@ -2206,6 +2246,69 @@
             "time": "2020-12-14T13:15:25+00:00"
         },
         {
+            "name": "mtownsend/response-xml",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mtownsend5512/response-xml.git",
+                "reference": "4051c9d1847f267182fccb4bff3980e437d31328"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mtownsend5512/response-xml/zipball/4051c9d1847f267182fccb4bff3980e437d31328",
+                "reference": "4051c9d1847f267182fccb4bff3980e437d31328",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/container": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "illuminate/http": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "illuminate/routing": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0",
+                "php": "~7.0|~8.0",
+                "spatie/array-to-xml": "^2.16"
+            },
+            "require-dev": {
+                "laravel/framework": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0",
+                "phpunit/phpunit": "^6.4|^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mtownsend\\ResponseXml\\Providers\\ResponseXmlServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mtownsend\\ResponseXml\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Townsend",
+                    "email": "mtownsend5512@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The missing XML support for Laravel's Response class.",
+            "keywords": [
+                "api",
+                "laravel",
+                "response",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/mtownsend5512/response-xml/issues",
+                "source": "https://github.com/mtownsend5512/response-xml/tree/2.0.0"
+            },
+            "time": "2021-01-11T14:04:45+00:00"
+        },
+        {
             "name": "nesbot/carbon",
             "version": "2.43.0",
             "source": {
@@ -3200,6 +3303,70 @@
                 }
             ],
             "time": "2020-08-18T17:17:46+00:00"
+        },
+        {
+            "name": "spatie/array-to-xml",
+            "version": "2.16.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/array-to-xml.git",
+                "reference": "db39308c5236b69b89cadc3f44f191704814eae2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/db39308c5236b69b89cadc3f44f191704814eae2",
+                "reference": "db39308c5236b69b89cadc3f44f191704814eae2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpunit/phpunit": "^9.0",
+                "spatie/phpunit-snapshot-assertions": "^4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\ArrayToXml\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://freek.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Convert an array to xml",
+            "homepage": "https://github.com/spatie/array-to-xml",
+            "keywords": [
+                "array",
+                "convert",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/array-to-xml/issues",
+                "source": "https://github.com/spatie/array-to-xml/tree/2.16.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-11-18T22:03:17+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -5575,6 +5742,60 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.3"
             },
             "time": "2020-07-13T06:12:54+00:00"
+        },
+        {
+            "name": "twilio/sdk",
+            "version": "6.22.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twilio/twilio-php.git",
+                "reference": "b24040f9bcd2237e4210dcafd9a287fad9759a8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/b24040f9bcd2237e4210dcafd9a287fad9759a8a",
+                "reference": "b24040f9bcd2237e4210dcafd9a287fad9759a8a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^6.3 || ^7.0",
+                "phpunit/phpunit": ">=4.5",
+                "theseer/phpdox": "^0.12.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "An HTTP client to execute the API requests"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Twilio\\": "src/Twilio/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Twilio API Team",
+                    "email": "api@twilio.com"
+                }
+            ],
+            "description": "A PHP wrapper for Twilio's API",
+            "homepage": "http://github.com/twilio/twilio-php",
+            "keywords": [
+                "api",
+                "sms",
+                "twilio"
+            ],
+            "support": {
+                "issues": "https://github.com/twilio/twilio-php/issues",
+                "source": "https://github.com/twilio/twilio-php/tree/6.22.0"
+            },
+            "time": "2021-04-21T19:45:05+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
