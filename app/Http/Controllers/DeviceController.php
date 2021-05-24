@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Device;
+use Livewire\WithPagination;
+use GuzzleHttp\Client;
+use App\Models\Event;
 
 class DeviceController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,7 @@ class DeviceController extends Controller
      */
     public function index()
     {
-        return view('devices.index');
+        return view('admin.devices.index'); 
     }
 
     /**

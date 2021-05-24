@@ -187,7 +187,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'dashboard',
+    'dashboard_url' => 'devices',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -235,24 +235,38 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'Dashboard',
-            'route'         => 'admin.home',
-            'icon'        => 'fas fa-fw fa-tachometer-alt',
+            'text' => 'Dashboard',
+            'route' => 'admin.home',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
             'can' => 'Ver administrador'
         ],
         [
-            'text'        => 'Lista de Roles',
-            'route'         => 'admin.roles.index',
-            'icon'        => 'fas fa-fw fa-user-cog',
+            'text' => 'Lista de Roles',
+            'route' => 'admin.roles.index',
+            'icon' => 'fas fa-fw fa-user-cog',
             'can' => 'Listar role',
             'active' => ['admin/roles*']
         ],
         [
-            'text'        => 'Usuarios',
-            'route'         => 'admin.users.index',
-            'icon'        => 'fas fa-fw fa-users',
+            'text' => 'Usuarios',
+            'route' => 'admin.users.index',
+            'icon' => 'fas fa-fw fa-users',
             'can' => 'Leer usuarios',
             'active' => ['admin/users*']
+        ],
+        [
+            'text' => 'Dispositivos',
+            'route' => 'admin.devices.index',
+            'icon' => 'fas fa-fw fa-users',
+            'can' => 'Ver Dispositivos',
+            'active' => ['admin/devices*']
+        ],
+        [
+            'text'  => 'Mensajes',
+            'route' => 'admin.messages.index',
+            'icon' => 'fas fa-fw fa-users',
+            'can' => 'Ver Dispositivos',
+            'active' => ['admin/messages*']
         ],
         ['header' => 'account_settings'],
         [

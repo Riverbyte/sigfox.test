@@ -19,6 +19,7 @@ class CreateEventsTable extends Migration
             $table->string('name');
             $table->string('destination');
             $table->string('content');
+            $table->boolean('active');
 
             $table->unsignedBigInteger('device_id');
 

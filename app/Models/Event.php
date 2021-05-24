@@ -9,7 +9,7 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','destination','content','device_id'];
+    protected $fillable = ['name','destination','content','active','device_id'];
 
     ///Relacion uno a muchos inversa
     public function device(){

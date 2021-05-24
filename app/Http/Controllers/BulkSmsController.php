@@ -49,7 +49,8 @@ class BulkSmsController extends Controller
        $client = new Client( $sid, $token );
 
        // Use the Twilio-provided site for the TwiML response.
-       $url = route('callmessage');
+       //$url = route('callmessage');
+       $url = 'http://riarweb.com/MENSAGE_XML.php';
 
        $numbers_in_arrays = explode( ',' , $numbers );
 

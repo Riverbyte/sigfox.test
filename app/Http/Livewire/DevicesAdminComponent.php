@@ -8,21 +8,24 @@ use Livewire\WithPagination;
 use GuzzleHttp\Client;
 use App\Models\Event;
 
+
 class DevicesAdminComponent extends Component
 {
     use WithPagination; 
 
     public $device, $name, $description, $user, $device_id, $pac;
-    public $event_name, $email_destination, $message_destination, $call_destination, $email_content, $message_content, $call_content, $event_mail_id, $event_call_id, $event_msg_id;
+    public $event_name, $email_checkbox = 0, $email_destination, $message_checkbox = 0, $message_destination, $call_checkbox = 0, $call_destination, $email_content, $message_content, $call_content, $event_mail_id, $event_call_id, $event_msg_id;
 
     public $deviceTypeId = '5f4e7ec5c563d604790a8711';
 
+
+    public $permisos;
     public $active;
     public $q;
     public $sortBy = 'id';
     public $sortAsc = true;
     public $item;
-    public $perPage = '10';
+    public $perPage = '25';
  
     public $confirmingItemDeletion = false;
     public $confirmingItemSuspend = false;
@@ -52,15 +55,18 @@ class DevicesAdminComponent extends Component
    
     public function render()
     {
-        $user_auth = auth()->user()->id;
-        $this->user = $user_auth;
+        $this->user_id = auth()->user()->id;
+        $admin = auth()->user()->hasRole('Admin');
 
-        $devices = Device::when( $this->q, function($query) {
-                return $query->where(function( $query) {
-                    $query->where('name', 'like', '%'.$this->q . '%')
-                        ->orWhere('device', 'like', '%' . $this->q . '%')
-                        ->orWhere('description', 'like', '%' . $this->q . '%')
-                        ->orWhere('user',$this->q);
+        $devices = Device::when($admin != 1, function( $query) {
+                     return $query->where('user', $this->user_id );
+                })
+                ->when( $this->q, function($query) {
+                    return $query->where(function( $query) {
+                        $query->where('name', 'like', '%'.$this->q . '%')
+                            ->orWhere('device', 'like', '%' . $this->q . '%')
+                            ->orWhere('description', 'like', '%' . $this->q . '%')
+                            ->orWhere('user',$this->q);
                 });
             })
             ->when($this->active, function( $query) {
@@ -69,23 +75,7 @@ class DevicesAdminComponent extends Component
             ->orderBy( $this->sortBy, $this->sortAsc ? 'ASC' : 'DESC');
 
 
-        //     $devices = Device::when($user_auth == 1, function( $query) {
-        //         return $query->where('user', $user_auth );
-        //     })->
-        //     when( $this->q, function($query) {
-        //     return $query->where(function( $query) {
-        //         $query->where('name', 'like', '%'.$this->q . '%')
-        //             ->orWhere('device', 'like', '%' . $this->q . '%')
-        //             ->orWhere('description', 'like', '%' . $this->q . '%')
-        //             ->orWhere('user',$this->q);
-        //     });
-        // })
-        // ->when($this->active, function( $query) {
-        //     return $query->active();
-        // })
-        // ->orderBy( $this->sortBy, $this->sortAsc ? 'ASC' : 'DESC');
-
-
+  
 
  
         $query = $devices->toSql();
@@ -121,7 +111,6 @@ class DevicesAdminComponent extends Component
         return view('livewire.devices-admin-component', [
             'devices' => $devices,
             'query' => $query,
-            'user_auth' => $user_auth,
             'response' => $response->data,
         ]);
 
@@ -393,24 +382,27 @@ class DevicesAdminComponent extends Component
     public function confirmEventEdit(Device $device) 
     {
         $this->resetErrorBag();
-        $this->reset(['event_name','email_destination','message_destination','call_destination','email_content','message_content','call_content', 'event_mail_id','event_msg_id', 'device_id','event_call_id' ]);
+        $this->reset(['event_name','email_destination','message_destination','call_destination','email_content','message_content','call_content', 'event_mail_id','event_msg_id', 'device_id','event_call_id','email_checkbox','message_checkbox','call_checkbox' ]);
 
         foreach ($device->events as $key => $event) {
             if ($event->name == 'EMAIL') {
                 $this->email_destination = $event->destination;
                 $this->email_content = $event->content;
+                $this->email_checkbox = $event->active;
                 $this->event_mail_id = $event->id;
             }
             else
             if ($event->name == 'MESSAGE') {
                 $this->message_destination = $event->destination;
                 $this->message_content = $event->content;
+                $this->message_checkbox = $event->active;
                 $this->event_msg_id = $event->id;
             }
             else
             if ($event->name == 'CALL') {
                 $this->call_destination = $event->destination;
                 $this->call_content = $event->content;
+                $this->call_checkbox = $event->active;
                 $this->event_call_id = $event->id;
             }
             
@@ -424,79 +416,144 @@ class DevicesAdminComponent extends Component
 
     public function saveEvent()
     {
+        $e_ERROR = 0;
+        $e_ERROR_MESSAGE = '';
         if( isset( $this->event_mail_id)) 
         {
-            $event = Event::find($this->event_mail_id);
-            $event->update([
-                'destination' => $this->email_destination,
-                'content' => $this->email_content,
-                'device_id' => $this->device_id
-            ]);
-            session()->flash('message', 'Item Updated Successfully');
-            session()->flash('alert-class', 'alert-succes'); 
-    
+            if($this->email_destination == '' || $this->email_content == '')
+            {
+                $e_ERROR = 1;
+                $e_ERROR_MESSAGE = 'Es obligatorio el correo y el contenido, no se guardaron los cambios';
+            }
+            else
+            {
+                $event = Event::find($this->event_mail_id);
+                $event->update([
+                    'destination' => $this->email_destination,
+                    'content' => $this->email_content,
+                    'active' => $this->email_checkbox,
+                    'device_id' => $this->device_id
+                ]);
+            }
         }
         else
+        if( isset( $this->email_destination) && isset( $this->email_content)) 
         {
             Event::create([
                 'name' => 'EMAIL',
                 'destination' => $this->email_destination,
                 'content' => $this->email_content,
+                'active' => $this->email_checkbox,
                 'device_id' => $this->device_id
             ]);
+        }
+        else
+        if($this->email_destination == '' || $this->email_content == '')
+        {
+            $e_ERROR = 1;
+            $e_ERROR_MESSAGE = 'Es obligatorio el correo y el contenido, no se guardaron los cambios';
+            
         }
 
 
         if( isset( $this->event_msg_id)) 
         {
-            $event = Event::find($this->event_msg_id);
-            $event->update([
-                'destination' => $this->message_destination,
-                'content' => $this->message_content,
-                'device_id' => $this->device_id
-            ]);
-            session()->flash('message', 'Item Updated Successfully');
-            session()->flash('alert-class', 'alert-succes'); 
-    
+            if($this->message_destination == '' || $this->message_content == '')
+            {
+                $e_ERROR = 1;
+                $e_ERROR_MESSAGE = 'Es obligatorio el telefono y el mensaje en el evento MESSAGE, no se guardaron los cambios';
+            }
+            else
+            {
+                $event = Event::find($this->event_msg_id);
+                $event->update([
+                    'destination' => $this->message_destination,
+                    'content' => $this->message_content,
+                    'active' => $this->message_checkbox,
+                    'device_id' => $this->device_id
+                ]);
+            }
         }
         else
+        if( isset( $this->message_destination) && isset( $this->message_content)) 
         {
             Event::create([
                 'name' => 'MESSAGE',
                 'destination' => $this->message_destination,
                 'content' => $this->message_content,
+                'active' => $this->message_checkbox,
                 'device_id' => $this->device_id
             ]);
         }
+        else
+        if($this->message_destination == '' || $this->message_content == '')
+        {
+            $e_ERROR = 1;
+            $e_ERROR_MESSAGE = 'Es obligatorio el telefono y el mensaje en el evento MESSAGE, no se guardaron los cambios';
+        }        
         
 
         if( isset( $this->event_call_id)) 
         {
-            $event = Event::find($this->event_call_id);
-            $event->update([
-                'destination' => $this->call_destination,
-                'content' => $this->call_content,
-                'device_id' => $this->device_id
-            ]);
-            session()->flash('message', 'Item Updated Successfully');
-            session()->flash('alert-class', 'alert-succes'); 
-    
+            if($this->call_destination == '' || $this->call_content == '')
+            {
+                $e_ERROR = 1;
+                $e_ERROR_MESSAGE = 'Es obligatorio el telefono y el mensaje en el evento CALL, no se guardaron los cambios';
+            }
+            else
+            {
+                $event = Event::find($this->event_call_id);
+                $event->update([
+                    'destination' => $this->call_destination,
+                    'content' => $this->call_content,
+                    'active' => $this->call_checkbox,
+                    'device_id' => $this->device_id
+                ]);
+            }
         }
         else
+        if( isset( $this->call_destination) && isset( $this->call_content)) 
         {
             Event::create([
                 'name' => 'CALL',
                 'destination' => $this->call_destination,
                 'content' => $this->call_content,
+                'active' => $this->call_checkbox,
                 'device_id' => $this->device_id
             ]);
+        }
+        else
+        if($this->call_destination == '' || $this->call_content == '')
+        {
+            $e_ERROR = 1;
+            $e_ERROR_MESSAGE = 'Es obligatorio el telefono y el mensaje en el evento CALL, no se guardaron los cambios';
+            
+        }
+
+
+
+
+
+
+        
+        if($e_ERROR)
+        {
+            session()->flash('message', $e_ERROR_MESSAGE);
+            session()->flash('alert-class', 'alert-danger'); 
+        }
+        else
+        {
+            session()->flash('message', 'Item Updated Successfully');
+            session()->flash('alert-class', 'alert-succes'); 
         }
         
 
         $this->confirmingEventAdd = false;
-        $this->reset(['event_name','email_destination','message_destination','call_destination','email_content','message_content','call_content', 'event_mail_id','event_msg_id', 'device_id','event_call_id' ]);
+        $this->reset(['event_name','email_destination','message_destination','call_destination','email_content','message_content','call_content', 'event_mail_id','event_msg_id', 'device_id','event_call_id','email_checkbox','message_checkbox','call_checkbox' ]);
 
     }
 
 
 }
+
+

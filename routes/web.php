@@ -33,9 +33,14 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 
 //Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', DeviceComponent::class)->name('dashboard');
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//    return view('devices.admin');
+//})->name('dashboard');
+
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/devices', function () {
     return view('devices.admin');
-})->name('dashboard');
+})->name('devices');
 
 
 //Route::middleware(['auth:sanctum', 'verified'])->get('/messages', MessageComponent::class)->name('messages');
@@ -43,13 +48,18 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/messages', function () {
     return view('messages.index');
 })->name('messages');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
+//Route::middleware(['auth:sanctum', 'verified'])->get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/messages/{device_id}', function ($device_id) {
+    return view('messages.show',['device_id' => $device_id]);
+})->name('messages.show');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/users', UsersComponent::class)->name('users');
 
 Route::middleware(['auth:sanctum', 'verified'])->resource('/events', EventController::class)->names('events');
 
-Route::middleware(['auth:sanctum', 'verified'])->resource('/devices', DeviceController::class)->names('devices');
+//Route::middleware(['auth:sanctum', 'verified'])->resource('/devices', DeviceController::class)->names('devices');
 
 Route::view('/bulksms', 'bulksms');
+
 Route::post('/bulksms', [BulkSmsController::class,'sendSms'])->name('bulksms.sms');

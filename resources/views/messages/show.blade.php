@@ -1,50 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Items') }}
         </h2>
     </x-slot>
+ 
 
-
-
-    <div class="pt-4 container mx-auto">
-
-        <button wire:click='render' id="actualiza">Click</button>
-        <div class="bg-white rounded-lg shadow overflow-hidden max-w-4xl mx-auto ">
-            <table class="bg-white rounded-lg shadow overflow-hidden max-w-4xl mx-auto ">
-                <thead class="bg-gray-50 border-b border-gray-200 ">
-                    <tr class="text-xs font-medium text-gray-500 uppercase tracking-wider ">
-                        <th class="px-6 py-3">ID</th>
-                        <th class="px-6 py-3">name</th>
-                        <th class="px-6 py-3">DEVICE</th>
-                        <th class="px-6 py-3">DATA</th>
-                        <TH class="px-6 py-3">TIME</TH>
-                    </tr>
-                </thead>
-        
-                <tbody class="divide-y divide-gray-200 ">
-                    @foreach ($messages as $message)
-                        <tr class="text-gray-500 ">
-                            <td class="py-2 px-6">{{$message->ID}}</td>
-                            <td class="py-2 px-6">{{$message->NAME}}</td>
-                            <td class="py-2 px-6">{{$message->DEVICE}}</td>
-                            <td class="py-2 px-6">{{$message->DATA}}</td>
-                            <td class="py-2 px-6">{{$message->TIME}}</td>
-                            
-                            
-                        </tr>
-                        
-                    @endforeach
-        
-                </tbody>
-            </table>
-
-            <div class="bg-gray-100 px-6 py-4 border-t border-gray-200 ">
-                {{$messages->links()}}
+    <div class="py-3 min-h-screen">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                @livewire('message-component',['device_id' => $device_id])
             </div>
         </div>
     </div>
-
-
-    
 </x-app-layout>

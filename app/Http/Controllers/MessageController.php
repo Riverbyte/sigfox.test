@@ -12,6 +12,18 @@ use App\Http\Controllers\BulkSmsController;
 
 class MessageController extends Controller
 {
+
+        /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('admin.messages.index'); 
+    }
+
+
     public function store(Request $request){
 
         
@@ -32,18 +44,18 @@ class MessageController extends Controller
 
         foreach ($device->events as $key => $event) 
         {
-            if ($event->name == 'EMAIL') 
+            if ($event->name == 'EMAIL' && $event->destination != '' && $event->content != '' && $event->active == 1) 
             {
                 Mail::to($event->destination)->send(new MensajeRecibidoMailable($message, $device,$event->content));
             }
             else
-            if ($event->name == 'MESSAGE') 
+            if ($event->name == 'MESSAGE' && $event->destination != '' && $event->content != '' && $event->active == 1)  
             {
                 $BulkSmsController = new BulkSmsController;
                 $BulkSmsController->sendSms($event->destination,$event->content);
             }
             else
-            if ($event->name == 'CALL') 
+            if ($event->name == 'CALL' && $event->destination != '' && $event->content != '' && $event->active == 1)  
             {
                 $BulkSmsController = new BulkSmsController;
                 $BulkSmsController->call($event->destination,$event->content);
@@ -54,16 +66,17 @@ class MessageController extends Controller
 
         
         
-        //return $device->name;
+        return $device->name;
     }
 
-
+/*
     public function show($id)
     {
         $messages = Message::join("devices","messages.DEVICE_ID","=","devices.ID")->select(DB::raw("messages.ID, devices.NAME,devices.DEVICE, messages.DATA, messages.TIME"))->where('device_id',$id)->orderBy('messages.ID','desc')->paginate();
 
         return view('messages.show', compact('messages'));
+        //return view('livewire.message-component', compact('messages'));
     }
-
+*/
 
 }

@@ -14,7 +14,8 @@ class MessageComponent extends Component
     public $sortBy = 'id';
     public $sortAsc = false;
     public $item;
-    public $perPage = '5';
+    public $perPage = '25';
+    public $device_id;
 
     protected $queryString = [
         'q' => ['except' => ''],
@@ -27,8 +28,19 @@ class MessageComponent extends Component
 
     public function render()
     {
-        $messages = Message::join("devices","messages.DEVICE_ID","=","devices.ID")->
-        select(DB::raw("messages.ID, devices.NAME,devices.DEVICE, messages.DATA, messages.TIME"))
+        $this->user_id = auth()->user()->id;
+        $admin = auth()->user()->hasRole('Admin');
+
+
+        $messages = Message::join("devices","messages.DEVICE_ID","=","devices.ID")
+        ->join("users","users.ID","=","devices.USER")
+        ->select(DB::raw("messages.ID, devices.NAME,devices.DEVICE, messages.DATA, messages.TIME"))
+        ->when($admin != 1, function( $query) {
+            return $query->where('users.ID', $this->user_id );
+        })
+        ->when($this->device_id, function( $query) {
+            return $query->where('device_id', $this->device_id );
+        })
         ->when( $this->q, function($query) {
             return $query->where(function( $query) {
                 $query->where('devices.NAME', 'like', '%'.$this->q . '%')
@@ -39,22 +51,15 @@ class MessageComponent extends Component
         ->orderBy( $this->sortBy, $this->sortAsc ? 'ASC' : 'DESC');
         $query = $messages->toSql();
         $messages = $messages->paginate( $this->perPage );
-        /*
-        $devices = Device::when( $this->q, function($query) {
-            return $query->where(function( $query) {
-                $query->where('name', 'like', '%'.$this->q . '%')
-                    ->orWhere('device', 'like', '%' . $this->q . '%')
-                    ->orWhere('description', 'like', '%' . $this->q . '%')
-                    ->orWhere('user',$this->q);
-            });
-        })
-        ->when($this->active, function( $query) {
-            return $query->active();
-        })
-        ->orderBy( $this->sortBy, $this->sortAsc ? 'ASC' : 'DESC');
-*/
+
+        $device = '';
+        if ($this->device_id) {
+            $device = Device::find($this->device_id);
+        }
+        
+
        // $messages = Message::latest('id')->get();
-        return view('livewire.message-component', compact('messages'));
+        return view('livewire.message-component', compact('messages','device','admin'));
         
     }
 

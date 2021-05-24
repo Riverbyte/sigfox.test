@@ -1,4 +1,4 @@
-<div class="p-6 sm:px-20 bg-white border-b border-gray-200">
+<div class="p-6  bg-white border-b border-gray-200 min-h-screen">
     @if(session()->has('message'))
     <div class=" border {{session('alert-class')}} px-4 py-3 rounded relative" role="alert" x-data="{show: true}" x-show="show">
         <p>{{ session('message') }}</p>
@@ -9,11 +9,18 @@
 
     @endif
     <div class="mt-8 text-2xl flex justify-between">
-        <div>Messages</div> 
+        <div>Mensajes @if($device_id) del dispositivo {{$device->name}} @endif  </div> 
+        <div>
+            <x-jet-button wire:click="render" class="bg-blue-500 hover:bg-blue-700" title="Edit">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>   
+            </x-jet-button>
+        </div>
         
     </div>
 
-    {{-- <button wire:click='render' id="actualiza">Click</button> --}}
+    
     
     <div class="mt-6">
         <div class="flex justify-between">
