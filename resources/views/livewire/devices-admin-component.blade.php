@@ -281,10 +281,14 @@
 
     <x-jet-dialog-modal wire:model="confirmingEventAdd">
         <x-slot name="title">
-            {{ isset( $this->device_id) ? 'Edit Device' : 'Add Device'}}
+            {{ isset( $this->device_id) ? 'Editar dispositivo' : 'Add Device'}}
         </x-slot>
  
         <x-slot name="content">
+
+            <div class="card mb-2">
+                Doy mi consentimiento de recibir llamadas telefónicas, mensajes de texto y/o correos electrónicos de las notificaciones de alerta de este dispositivo. 
+            </div>
 
             <h1 class="text-2x1 font-bold">Email: <input type="checkbox" class="form-checkbox rowCheckbox focus:outline-none focus:shadow-outline" wire:model.defer="email_checkbox"></h1>
 

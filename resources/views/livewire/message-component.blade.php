@@ -83,9 +83,15 @@
                     @foreach ($messages as $message)
                         <tr class="text-gray-500 ">
                             <td class="py-2 px-6">{{$message->ID}}</td>
-                            <td class="py-2 px-6">{{$message->NAME}}</td>
                             <td class="py-2 px-6">{{$message->DEVICE}}</td>
-                            <td class="py-2 px-6">{{$message->DATA}}</td>
+                            <td class="py-2 px-6">{{$message->NAME}}</td>
+                            <td class="py-2 px-6">
+                                @if(procesa_datos($message) != '' )
+                                @foreach (procesa_datos($message) as $item)
+                                    {{$item}}<br>                                
+                                @endforeach    
+                                @endif                                
+                            </td>
                             <td class="py-2 px-6">{{$message->TIME}}</td>
                             
                             

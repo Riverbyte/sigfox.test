@@ -144,6 +144,7 @@ class DevicesAdminComponent extends Component
 
     public function destroy(Device $device)
     {
+        
         $client = new Client([
             // Base URI is used with relative requests
             'base_uri' => 'https://api.sigfox.com/v2/',
@@ -189,6 +190,7 @@ class DevicesAdminComponent extends Component
     public function saveItem() 
     {
         $this->validate();
+        
  
         
         if( isset( $this->device_id)) {
@@ -418,7 +420,7 @@ class DevicesAdminComponent extends Component
     {
         $e_ERROR = 0;
         $e_ERROR_MESSAGE = '';
-        if( isset( $this->event_mail_id)) 
+        if( isset( $this->event_mail_id) && $this->email_checkbox) 
         {
             if($this->email_destination == '' || $this->email_content == '')
             {
@@ -437,26 +439,30 @@ class DevicesAdminComponent extends Component
             }
         }
         else
-        if( isset( $this->email_destination) && isset( $this->email_content)) 
+        if ($this->email_checkbox) 
         {
-            Event::create([
-                'name' => 'EMAIL',
-                'destination' => $this->email_destination,
-                'content' => $this->email_content,
-                'active' => $this->email_checkbox,
-                'device_id' => $this->device_id
-            ]);
-        }
-        else
-        if($this->email_destination == '' || $this->email_content == '')
-        {
-            $e_ERROR = 1;
-            $e_ERROR_MESSAGE = 'Es obligatorio el correo y el contenido, no se guardaron los cambios';
-            
+    
+            if( isset( $this->email_destination) && isset( $this->email_content)) 
+            {
+                Event::create([
+                    'name' => 'EMAIL',
+                    'destination' => $this->email_destination,
+                    'content' => $this->email_content,
+                    'active' => $this->email_checkbox,
+                    'device_id' => $this->device_id
+                ]);
+            }
+            else
+            if($this->email_destination == '' || $this->email_content == '')
+            {
+                $e_ERROR = 1;
+                $e_ERROR_MESSAGE = 'Es obligatorio el correo y el contenido, no se guardaron los cambios';
+                
+            }
         }
 
 
-        if( isset( $this->event_msg_id)) 
+        if( isset( $this->event_msg_id) && $this->message_checkbox) 
         {
             if($this->message_destination == '' || $this->message_content == '')
             {
@@ -475,25 +481,29 @@ class DevicesAdminComponent extends Component
             }
         }
         else
-        if( isset( $this->message_destination) && isset( $this->message_content)) 
+        if ($this->message_checkbox) 
         {
-            Event::create([
-                'name' => 'MESSAGE',
-                'destination' => $this->message_destination,
-                'content' => $this->message_content,
-                'active' => $this->message_checkbox,
-                'device_id' => $this->device_id
-            ]);
-        }
-        else
-        if($this->message_destination == '' || $this->message_content == '')
-        {
-            $e_ERROR = 1;
-            $e_ERROR_MESSAGE = 'Es obligatorio el telefono y el mensaje en el evento MESSAGE, no se guardaron los cambios';
-        }        
+          
+            if( isset( $this->message_destination) && isset( $this->message_content)) 
+            {
+                Event::create([
+                    'name' => 'MESSAGE',
+                    'destination' => $this->message_destination,
+                    'content' => $this->message_content,
+                    'active' => $this->message_checkbox,
+                    'device_id' => $this->device_id
+                ]);
+            }
+            else
+            if($this->message_destination == '' || $this->message_content == '')
+            {
+                $e_ERROR = 1;
+                $e_ERROR_MESSAGE = 'Es obligatorio el telefono y el mensaje en el evento MESSAGE, no se guardaron los cambios';
+            }  
+        }      
         
 
-        if( isset( $this->event_call_id)) 
+        if( isset( $this->event_call_id) && $this->call_checkbox) 
         {
             if($this->call_destination == '' || $this->call_content == '')
             {
@@ -512,24 +522,26 @@ class DevicesAdminComponent extends Component
             }
         }
         else
-        if( isset( $this->call_destination) && isset( $this->call_content)) 
+        if ($this->call_checkbox) 
         {
-            Event::create([
-                'name' => 'CALL',
-                'destination' => $this->call_destination,
-                'content' => $this->call_content,
-                'active' => $this->call_checkbox,
-                'device_id' => $this->device_id
-            ]);
+            if( isset( $this->call_destination) && isset( $this->call_content)) 
+            {
+                Event::create([
+                    'name' => 'CALL',
+                    'destination' => $this->call_destination,
+                    'content' => $this->call_content,
+                    'active' => $this->call_checkbox,
+                    'device_id' => $this->device_id
+                ]);
+            }
+            else
+            if($this->call_destination == '' || $this->call_content == '')
+            {
+                $e_ERROR = 1;
+                $e_ERROR_MESSAGE = 'Es obligatorio el telefono y el mensaje en el evento CALL, no se guardaron los cambios';
+                
+            }
         }
-        else
-        if($this->call_destination == '' || $this->call_content == '')
-        {
-            $e_ERROR = 1;
-            $e_ERROR_MESSAGE = 'Es obligatorio el telefono y el mensaje en el evento CALL, no se guardaron los cambios';
-            
-        }
-
 
 
 
