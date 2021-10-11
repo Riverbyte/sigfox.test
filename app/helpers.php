@@ -142,7 +142,7 @@ if (! function_exists('procesa_datos')) {
 
 
 
-        //////////////////////////////////////////  Heartbeat
+//////////////////////////////////////////  Heartbeat
         if($a_DATA[0] == '04' )
         {
             
@@ -162,7 +162,9 @@ if (! function_exists('procesa_datos')) {
         }
 
 
-        if($a_DATA[0] == '00' )
+        
+//////////////////////////////////////////  GENERIC
+        if($a_DATA[0] == '00' && $e_SIZE <= 10 && ctype_xdigit($message->DATA) )
         {
             $a_HW_VERSION_MAJOR = array(
                 '01' => 'UNABELL',
@@ -191,6 +193,10 @@ if (! function_exists('procesa_datos')) {
             $a_RETORNO[] = 'CONFIG MODE: '. $a_CONFIG_MODE[$a_CONFIG[0]] . ' Sensitivit: ' . $a_CONFIG_MODE_SENS[$a_CONFIG[1]] . PHP_EOL;
 
             $a_RETORNO[] = 'INTERVAL: '. round((86400 / hexdec($a_DATA[8])) / 60) . ' min' . PHP_EOL;
+        }
+        else
+        {
+            $a_RETORNO[] = $message->DATA;
         }
 
 

@@ -9,7 +9,7 @@ class Device extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['device','name','description','user'];
+    protected $fillable = ['device','name','description','user','alert','alert_json'];
 
      ///Relacion uno a muchos
      public function events(){

@@ -87,9 +87,11 @@
                             <td class="py-2 px-6">{{$message->NAME}}</td>
                             <td class="py-2 px-6">
                                 @if(procesa_datos($message) != '' )
-                                @foreach (procesa_datos($message) as $item)
-                                    {{$item}}<br>                                
-                                @endforeach    
+                                    @foreach (procesa_datos($message) as $item)
+                                        {{$item}}<br>                                
+                                    @endforeach  
+                                @else 
+                                    {{$message->DATA}}  
                                 @endif                                
                             </td>
                             <td class="py-2 px-6">{{$message->TIME}}</td>

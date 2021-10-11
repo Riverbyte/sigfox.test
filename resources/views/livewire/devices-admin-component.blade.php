@@ -236,8 +236,20 @@
 
             <div class="mb-4">
                 <x-jet-label for="name" class="form-label mb-2" value="{{ __('Name') }}" />
-                <x-jet-input id="name" type="text" class="form-control " wire:model.defer="name" />
+                <select wire:model.defer="name" class=" outline-none text-gray-500 text-sm " id="name" >
+                    <option value="">Seleccione una opcion</option>
+                    <option value="BEACON">BEACON</option>
+                    <option value="BELL">BELL</option>
+                    <option value="MOTION">MOTION</option>
+                    <option value="PROTECT">PROTECT</option>
+                    <option value="25">SENSE</option>
+                    <option value="SENSE">SENSE</option>
+                </select>
                 <x-jet-input-error for="name" class="mt-2" />
+                
+                {{-- <x-jet-label for="name" class="form-label mb-2" value="{{ __('Name') }}" />
+                <x-jet-input id="name" type="select" class="form-control " wire:model.defer="name" />
+                <x-jet-input-error for="name" class="mt-2" /> --}}
             </div>
  
             <div class="mb-4">
